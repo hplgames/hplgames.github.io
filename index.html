@@ -1,0 +1,193 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trò Chơi Gia Đình</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Game shelf: each game is a box on a graph-paper table, colored like the game itself */
+  :root {
+    color-scheme: light;
+    --table: #eef0fb;
+    --grid: #dde2f4;
+    --ink: #22305c;
+    --muted: #56607e;
+    --card: #ffffff;
+    --caro: #ffd23f;
+    --caro-bg: #fff3cf;
+    --sudoku: #8fd3ae;
+    --sudoku-bg: #e4f2ea;
+    --x: #ff5a36;
+    --o: #1e88ff;
+    --pen: #2f6feb;
+    --font: "Baloo 2", "Segoe UI", system-ui, sans-serif;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; }
+  html { height: 100%; }
+  body {
+    margin: 0; min-height: 100%;
+    background-color: var(--table);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: var(--ink); font-family: var(--font); font-weight: 500; font-size: 16px; line-height: 1.35;
+    padding-block: 14px 18px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  html[lang^="zh"] body { font-family: "Baloo 2", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  :focus-visible { outline: 3px solid #7a3cff; outline-offset: 3px; }
+  .wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  header { display: flex; align-items: flex-start; gap: 12px; }
+  .brand { flex: 1; min-width: 0; }
+  h1 { margin: 0; font-size: clamp(30px, 8vw, 44px); font-weight: 800; line-height: 1; letter-spacing: -0.5px; text-wrap: balance; }
+  h1 .dot { display: inline-block; width: .32em; height: .32em; border-radius: 50%; background: var(--x); margin-left: .08em; vertical-align: .05em; }
+  .sub { margin: 6px 0 0; color: var(--muted); font-size: 17px; max-width: 46ch; }
+  .lang {
+    border: 0; background: var(--card); border-radius: 12px; min-width: 44px; height: 40px; padding: 0 10px;
+    font: 700 15px var(--font); color: var(--ink); box-shadow: 0 2px 0 #c3c9e4; cursor: pointer; flex: none;
+  }
+
+  .shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .game {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--card); border: 3px solid var(--ink); border-radius: 22px; overflow: hidden;
+    box-shadow: 0 5px 0 var(--ink); transition: transform .12s, box-shadow .12s;
+  }
+  .game:hover { transform: translateY(-3px); box-shadow: 0 8px 0 var(--ink); }
+  .game:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+  .art { display: grid; place-items: center; padding: 18px; border-bottom: 3px solid var(--ink); }
+  .art svg { width: 150px; height: 150px; }
+  .caro .art { background: var(--caro-bg); }
+  .sudoku .art { background: var(--sudoku-bg); }
+  .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .name { display: flex; align-items: baseline; gap: 8px; }
+  .name h2 { margin: 0; font-size: 26px; line-height: 1.05; flex: 1; }
+  .ver { font-size: 12.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .desc { margin: 0; color: var(--muted); }
+  .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .facts li { background: var(--table); border-radius: 10px; padding: 2px 10px; font-size: 13.5px; font-weight: 600; }
+  .play {
+    margin-top: auto; align-self: flex-start; border-radius: 14px; padding: 8px 18px; font-weight: 800; font-size: 17px;
+    border: 3px solid var(--ink); box-shadow: 0 3px 0 var(--ink);
+  }
+  .caro .play { background: var(--caro); }
+  .sudoku .play { background: var(--sudoku); }
+
+  footer { text-align: center; font-size: 12.5px; color: #6f7a94; }
+
+  @media (prefers-reduced-motion: reduce) { .game { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1><span data-t="title"></span><span class="dot" aria-hidden="true"></span></h1>
+      <p class="sub" data-t="sub"></p>
+    </div>
+    <button class="lang" id="langBtn" type="button">VI</button>
+  </header>
+
+  <main class="shelf">
+    <a class="game caro" href="/co-caro/">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 150 150">
+          <rect x="5" y="5" width="140" height="140" rx="14" fill="#fff" stroke="#22305c" stroke-width="4"/>
+          <path d="M52 12v126M98 12v126M12 52h126M12 98h126" stroke="#22305c" stroke-width="4" stroke-linecap="round"/>
+          <g stroke="#ff5a36" stroke-width="9" stroke-linecap="round">
+            <path d="M18 18l22 22M40 18l-22 22"/><path d="M64 64l22 22M86 64l-22 22"/><path d="M110 110l22 22M132 110l-22 22"/>
+          </g>
+          <g fill="none" stroke="#1e88ff" stroke-width="8"><circle cx="121" cy="29" r="13"/><circle cx="29" cy="121" r="13"/></g>
+          <path d="M20 20L130 130" stroke="#ffd23f" stroke-width="6" stroke-linecap="round" opacity=".85"/>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="name"><h2 data-t="caroName"></h2><span class="ver" data-ver="co-caro"></span></div>
+        <p class="desc" data-t="caroDesc"></p>
+        <ul class="facts"><li data-t="caroF1"></li><li data-t="caroF2"></li><li data-t="caroF3"></li></ul>
+        <span class="play" data-t="play"></span>
+      </div>
+    </a>
+
+    <a class="game sudoku" href="/sudoku/">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 150 150" font-family="Baloo 2, Segoe UI, sans-serif" font-weight="800" font-size="30" text-anchor="middle">
+          <rect x="5" y="5" width="140" height="140" rx="14" fill="#fff" stroke="#22305c" stroke-width="4"/>
+          <rect x="51.7" y="51.7" width="46.6" height="46.6" fill="#ffe28a"/>
+          <path d="M51.7 7v136M98.3 7v136M7 51.7h136M7 98.3h136" stroke="#22305c" stroke-width="4"/>
+          <g fill="#22305c"><text x="29" y="40">5</text><text x="121" y="40">3</text><text x="29" y="133">8</text><text x="121" y="87">1</text><text x="75" y="133">4</text></g>
+          <g fill="#2f6feb"><text x="75" y="40">7</text><text x="75" y="87">9</text></g>
+          <g fill="#7a8199" font-size="13" font-weight="600"><text x="21" y="77">2</text><text x="37" y="77">6</text><text x="113" y="124">2</text></g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="name"><h2 data-t="sudokuName"></h2><span class="ver" data-ver="sudoku"></span></div>
+        <p class="desc" data-t="sudokuDesc"></p>
+        <ul class="facts"><li data-t="sudokuF1"></li><li data-t="sudokuF2"></li><li data-t="sudokuF3"></li></ul>
+        <span class="play" data-t="play"></span>
+      </div>
+    </a>
+  </main>
+
+  <footer id="foot">Father_AI · v1.0</footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const APP_VERSION = "1.0"; // bump on every update
+  const I18N = {
+    vi: {
+      title: 'Trò chơi gia đình', sub: 'Các trò chơi trí tuệ nhỏ cho cả nhà. Chọn một trò để bắt đầu.',
+      play: 'Chơi ngay', lang: 'Đổi ngôn ngữ',
+      caroName: 'Cờ Caro', caroDesc: 'Xếp 3 hoặc 5 quân liên tiếp trước bạn để thắng.',
+      caroF1: '2 người hoặc chơi với máy', caroF2: 'Bàn 3×3 và 15×15', caroF3: '6 hình nền',
+      sudokuName: 'Sudoku', sudokuDesc: 'Điền số sao cho mỗi hàng, cột và khối đủ số, không lặp.',
+      sudokuF1: '1 người', sudokuF2: 'Bàn 4×4, 6×6, 9×9', sudokuF3: 'Có hướng dẫn và gợi ý',
+    },
+    en: {
+      title: 'Family games', sub: 'Small brain games for the whole family. Pick one to start.',
+      play: 'Play', lang: 'Change language',
+      caroName: 'Tic-tac-toe & Gomoku', caroDesc: 'Get 3 or 5 in a row before the other player.',
+      caroF1: '2 players or vs computer', caroF2: '3×3 and 15×15 boards', caroF3: '6 backgrounds',
+      sudokuName: 'Sudoku', sudokuDesc: 'Fill every row, column and box with each number once.',
+      sudokuF1: '1 player', sudokuF2: '4×4, 6×6, 9×9 boards', sudokuF3: 'Tutorial and hints',
+    },
+    zh: {
+      title: '家庭游戏', sub: '适合全家的益智小游戏。选一个开始吧。',
+      play: '开始玩', lang: '切换语言',
+      caroName: '井字棋·五子棋', caroDesc: '先连成 3 子或 5 子的一方获胜。',
+      caroF1: '双人或人机', caroF2: '3×3 和 15×15', caroF3: '6 种背景',
+      sudokuName: '数独', sudokuDesc: '让每行、每列、每宫的数字都齐全且不重复。',
+      sudokuF1: '单人', sudokuF2: '4×4、6×6、9×9', sudokuF3: '有教程和提示',
+    },
+  };
+  const LANGS = ['vi', 'en', 'zh'], LABEL = { vi: 'VI', en: 'EN', zh: '中' }, KEY = 'tro-choi-gia-dinh-lang';
+  let lang = 'vi';
+  try { const v = localStorage.getItem(KEY); if (LANGS.includes(v)) lang = v; } catch (e) { /* storage unavailable */ }
+  const t = (k) => I18N[lang][k] || I18N.vi[k] || k;
+  function apply() {
+    document.documentElement.lang = lang;
+    document.title = t('title');
+    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
+    const b = document.getElementById('langBtn');
+    b.textContent = LABEL[lang]; b.title = t('lang'); b.setAttribute('aria-label', t('lang'));
+  }
+  document.getElementById('langBtn').addEventListener('click', () => {
+    lang = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length];
+    try { localStorage.setItem(KEY, lang); } catch (e) { /* ignore */ }
+    apply();
+  });
+  document.getElementById('foot').textContent = 'Father_AI · v' + APP_VERSION;
+  apply();
+
+  // Show each game's current version, read from its own file (same site).
+  document.querySelectorAll('[data-ver]').forEach((el) => {
+    fetch('/' + el.dataset.ver + '/', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.text() : ''))
+      .then((s) => { const m = /APP_VERSION = "([\d.]+)"/.exec(s); if (m) el.textContent = 'v' + m[1]; })
+      .catch(() => {});
+  });
+})();
+</script>
