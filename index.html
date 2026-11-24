@@ -17,6 +17,8 @@
     --caro-bg: #fff3cf;
     --sudoku: #8fd3ae;
     --sudoku-bg: #e4f2ea;
+    --oaq: #ffd166;
+    --oaq-bg: #2c4643;
     --x: #ff5a36;
     --o: #1e88ff;
     --pen: #2f6feb;
@@ -37,7 +39,7 @@
   }
   html[lang^="zh"] body { font-family: "Baloo 2", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
   :focus-visible { outline: 3px solid #7a3cff; outline-offset: 3px; }
-  .wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 
   header { display: flex; align-items: flex-start; gap: 12px; }
   .brand { flex: 1; min-width: 0; }
@@ -61,6 +63,7 @@
   .art svg { width: 150px; height: 150px; }
   .caro .art { background: var(--caro-bg); }
   .sudoku .art { background: var(--sudoku-bg); }
+  .oaq .art { background: var(--oaq-bg); }
   .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .name { display: flex; align-items: baseline; gap: 8px; }
   .name h2 { margin: 0; font-size: 26px; line-height: 1.05; flex: 1; }
@@ -74,6 +77,7 @@
   }
   .caro .play { background: var(--caro); }
   .sudoku .play { background: var(--sudoku); }
+  .oaq .play { background: var(--oaq); }
 
   footer { text-align: center; font-size: 12.5px; color: #6f7a94; }
 
@@ -128,6 +132,25 @@
         <span class="play" data-t="play"></span>
       </div>
     </a>
+    <a class="game oaq" href="/o-an-quan/">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 150 150">
+          <rect x="6" y="45" width="138" height="60" rx="30" fill="none" stroke="#f2efe6" stroke-width="3"/>
+          <path d="M36 45v60M114 45v60M36 75h78M62 45v60M88 45v60" stroke="#f2efe6" stroke-width="2.5"/>
+          <ellipse cx="21" cy="70" rx="9" ry="8" fill="#7d858b"/><ellipse cx="129" cy="70" rx="9" ry="8" fill="#7d858b"/>
+          <g fill="#c9b79c"><circle cx="45" cy="58" r="3.5"/><circle cx="52" cy="64" r="3.5"/><circle cx="73" cy="88" r="3.5"/><circle cx="99" cy="57" r="3.5"/><circle cx="105" cy="92" r="3.5"/></g>
+          <g fill="#8e9aa3"><circle cx="54" cy="56" r="3.5"/><circle cx="80" cy="94" r="3.5"/><circle cx="46" cy="90" r="3.5"/><circle cx="96" cy="88" r="3.5"/><circle cx="74" cy="60" r="3.5"/></g>
+          <g fill="#a6876a"><circle cx="47" cy="96" r="3.5"/><circle cx="81" cy="62" r="3.5"/><circle cx="104" cy="62" r="3.5"/></g>
+          <path d="M66 26q12-12 24 0" fill="none" stroke="#ffd166" stroke-width="3" stroke-linecap="round"/><path d="M90 26l-6-1 4-5" fill="none" stroke="#ffd166" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="name"><h2 data-t="oaqName"></h2><span class="ver" data-ver="o-an-quan"></span></div>
+        <p class="desc" data-t="oaqDesc"></p>
+        <ul class="facts"><li data-t="oaqF1"></li><li data-t="oaqF2"></li><li data-t="oaqF3"></li></ul>
+        <span class="play" data-t="play"></span>
+      </div>
+    </a>
   </main>
 
   <footer id="foot">Father_AI · v1.0</footer>
@@ -136,7 +159,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = "1.0"; // bump on every update
+  const APP_VERSION = "1.1"; // bump on every update
   const I18N = {
     vi: {
       title: 'Trò chơi gia đình', sub: 'Các trò chơi trí tuệ nhỏ cho cả nhà. Chọn một trò để bắt đầu.',
@@ -145,6 +168,8 @@
       caroF1: '2 người hoặc chơi với máy', caroF2: 'Bàn 3×3 và 15×15', caroF3: '6 hình nền',
       sudokuName: 'Sudoku', sudokuDesc: 'Điền số sao cho mỗi hàng, cột và khối đủ số, không lặp.',
       sudokuF1: '1 người', sudokuF2: 'Bàn 4×4, 6×6, 9×9', sudokuF3: 'Có hướng dẫn và gợi ý',
+      oaqName: 'Ô ăn quan', oaqDesc: 'Trò chơi dân gian: rải quân, ăn quân, ai ăn được nhiều điểm hơn thì thắng.',
+      oaqF1: '2 người hoặc chơi với máy', oaqF2: 'Trò chơi dân gian Việt', oaqF3: 'Có hướng dẫn và gợi ý',
     },
     en: {
       title: 'Family games', sub: 'Small brain games for the whole family. Pick one to start.',
@@ -153,6 +178,8 @@
       caroF1: '2 players or vs computer', caroF2: '3×3 and 15×15 boards', caroF3: '6 backgrounds',
       sudokuName: 'Sudoku', sudokuDesc: 'Fill every row, column and box with each number once.',
       sudokuF1: '1 player', sudokuF2: '4×4, 6×6, 9×9 boards', sudokuF3: 'Tutorial and hints',
+      oaqName: 'O An Quan', oaqDesc: 'A Vietnamese folk game: sow seeds, capture seeds, highest score wins.',
+      oaqF1: '2 players or vs computer', oaqF2: 'Vietnamese folk game', oaqF3: 'Tutorial and hints',
     },
     zh: {
       title: '家庭游戏', sub: '适合全家的益智小游戏。选一个开始吧。',
@@ -161,6 +188,8 @@
       caroF1: '双人或人机', caroF2: '3×3 和 15×15', caroF3: '6 种背景',
       sudokuName: '数独', sudokuDesc: '让每行、每列、每宫的数字都齐全且不重复。',
       sudokuF1: '单人', sudokuF2: '4×4、6×6、9×9', sudokuF3: '有教程和提示',
+      oaqName: '吃官棋', oaqDesc: '越南民间游戏：播种、吃子，得分高者胜。',
+      oaqF1: '双人或人机', oaqF2: '越南民间游戏', oaqF3: '有教程和提示',
     },
   };
   const LANGS = ['vi', 'en', 'zh'], LABEL = { vi: 'VI', en: 'EN', zh: '中' }, KEY = 'tro-choi-gia-dinh-lang';
