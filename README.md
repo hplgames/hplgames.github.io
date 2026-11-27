@@ -5,6 +5,7 @@ Trang menu chung cho các trò chơi trí tuệ nhỏ của cả nhà: https://h
 - Cờ Caro: https://hplgames.github.io/co-caro/
 - Sudoku: https://hplgames.github.io/sudoku/
 - Ô ăn quan: https://hplgames.github.io/o-an-quan/
+- Tháp Hà Nội: https://hplgames.github.io/thap-ha-noi/
 
 Mỗi trò chơi nằm trong kho riêng. Thêm trò mới: tạo kho mới, bật GitHub Pages, rồi thêm một thẻ vào `index.html` ở đây.
 

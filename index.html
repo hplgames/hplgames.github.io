@@ -19,6 +19,8 @@
     --sudoku-bg: #e4f2ea;
     --oaq: #ffd166;
     --oaq-bg: #2c4643;
+    --thn: #2f9ccf;
+    --thn-bg: #dcefeb;
     --x: #ff5a36;
     --o: #1e88ff;
     --pen: #2f6feb;
@@ -39,7 +41,7 @@
   }
   html[lang^="zh"] body { font-family: "Baloo 2", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
   :focus-visible { outline: 3px solid #7a3cff; outline-offset: 3px; }
-  .wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 
   header { display: flex; align-items: flex-start; gap: 12px; }
   .brand { flex: 1; min-width: 0; }
@@ -51,7 +53,7 @@
     font: 700 15px var(--font); color: var(--ink); box-shadow: 0 2px 0 #c3c9e4; cursor: pointer; flex: none;
   }
 
-  .shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
   .game {
     display: flex; flex-direction: column; text-decoration: none; color: inherit;
     background: var(--card); border: 3px solid var(--ink); border-radius: 22px; overflow: hidden;
@@ -64,6 +66,7 @@
   .caro .art { background: var(--caro-bg); }
   .sudoku .art { background: var(--sudoku-bg); }
   .oaq .art { background: var(--oaq-bg); }
+  .thn .art { background: var(--thn-bg); }
   .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .name { display: flex; align-items: baseline; gap: 8px; }
   .name h2 { margin: 0; font-size: 26px; line-height: 1.05; flex: 1; }
@@ -78,6 +81,7 @@
   .caro .play { background: var(--caro); }
   .sudoku .play { background: var(--sudoku); }
   .oaq .play { background: var(--oaq); }
+  .thn .play { background: var(--thn); color: #fff; }
 
   footer { text-align: center; font-size: 12.5px; color: #6f7a94; }
 
@@ -151,6 +155,25 @@
         <span class="play" data-t="play"></span>
       </div>
     </a>
+    <a class="game thn" href="/thap-ha-noi/">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 150 150">
+          <rect x="10" y="112" width="130" height="10" rx="5" fill="#b5804f"/>
+          <rect x="29" y="52" width="6" height="62" rx="3" fill="#9a6a3e"/><rect x="72" y="52" width="6" height="62" rx="3" fill="#9a6a3e"/><rect x="115" y="52" width="6" height="62" rx="3" fill="#9a6a3e"/>
+          <rect x="10" y="100" width="44" height="12" rx="6" fill="#2f9ccf"/><rect x="15" y="88" width="34" height="12" rx="6" fill="#4fa957"/>
+          <rect x="58" y="100" width="34" height="12" rx="6" fill="#e9a91c"/>
+          <rect x="105" y="100" width="26" height="12" rx="6" fill="#ff8a3d"/>
+          <rect x="21" y="34" width="22" height="12" rx="6" fill="#ef4b5a"/>
+          <path d="M44 30q32-22 66 4" fill="none" stroke="#ff8a3d" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><path d="M104 26l7 8-10 3" fill="none" stroke="#ff8a3d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="name"><h2 data-t="thnName"></h2><span class="ver" data-ver="thap-ha-noi"></span></div>
+        <p class="desc" data-t="thnDesc"></p>
+        <ul class="facts"><li data-t="thnF1"></li><li data-t="thnF2"></li><li data-t="thnF3"></li></ul>
+        <span class="play" data-t="play"></span>
+      </div>
+    </a>
   </main>
 
   <footer id="foot">Father_AI · v1.0</footer>
@@ -159,7 +182,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = "1.1"; // bump on every update
+  const APP_VERSION = "1.2"; // bump on every update
   const I18N = {
     vi: {
       title: 'Trò chơi gia đình', sub: 'Các trò chơi trí tuệ nhỏ cho cả nhà. Chọn một trò để bắt đầu.',
@@ -170,6 +193,8 @@
       sudokuF1: '1 người', sudokuF2: 'Bàn 4×4, 6×6, 9×9', sudokuF3: 'Có hướng dẫn và gợi ý',
       oaqName: 'Ô ăn quan', oaqDesc: 'Trò chơi dân gian: rải quân, ăn quân, ai ăn được nhiều điểm hơn thì thắng.',
       oaqF1: '2 người hoặc chơi với máy', oaqF2: 'Trò chơi dân gian Việt', oaqF3: 'Có hướng dẫn và gợi ý',
+      thnName: 'Tháp Hà Nội', thnDesc: 'Chuyển cả chồng đĩa sang cọc khác, mỗi lần một đĩa, không đặt đĩa to lên đĩa nhỏ.',
+      thnF1: '1 người', thnF2: '3 đến 8 đĩa', thnF3: 'Có hướng dẫn, gợi ý, máy giải',
     },
     en: {
       title: 'Family games', sub: 'Small brain games for the whole family. Pick one to start.',
@@ -180,6 +205,8 @@
       sudokuF1: '1 player', sudokuF2: '4×4, 6×6, 9×9 boards', sudokuF3: 'Tutorial and hints',
       oaqName: 'O An Quan', oaqDesc: 'A Vietnamese folk game: sow seeds, capture seeds, highest score wins.',
       oaqF1: '2 players or vs computer', oaqF2: 'Vietnamese folk game', oaqF3: 'Tutorial and hints',
+      thnName: 'Tower of Hanoi', thnDesc: 'Move the whole stack to another peg, one disk at a time, never a big disk on a small one.',
+      thnF1: '1 player', thnF2: '3 to 8 disks', thnF3: 'Tutorial, hints, auto-solve',
     },
     zh: {
       title: '家庭游戏', sub: '适合全家的益智小游戏。选一个开始吧。',
@@ -190,6 +217,8 @@
       sudokuF1: '单人', sudokuF2: '4×4、6×6、9×9', sudokuF3: '有教程和提示',
       oaqName: '吃官棋', oaqDesc: '越南民间游戏：播种、吃子，得分高者胜。',
       oaqF1: '双人或人机', oaqF2: '越南民间游戏', oaqF3: '有教程和提示',
+      thnName: '汉诺塔', thnDesc: '一次移动一个圆盘，大盘不能压小盘，把整叠移到另一根柱子。',
+      thnF1: '单人', thnF2: '3 到 8 个圆盘', thnF3: '有教程、提示和自动解',
     },
   };
   const LANGS = ['vi', 'en', 'zh'], LABEL = { vi: 'VI', en: 'EN', zh: '中' }, KEY = 'tro-choi-gia-dinh-lang';
